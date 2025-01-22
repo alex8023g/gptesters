@@ -1,11 +1,20 @@
-export type UserApps = {
+import { TestingApps } from '@prisma/client';
+
+export type UserWithApps = {
   name: string | null;
   id: string;
   email: string;
-  apps: {
+  userApps: {
     name: string;
     id: string;
     url: string;
     userId: string;
   }[];
+};
+
+export type AppsForUserTesting = {
+  appId: string;
+  name: string;
+  url: string;
+  isInstaled: boolean;
 };

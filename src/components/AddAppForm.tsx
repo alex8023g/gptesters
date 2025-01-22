@@ -1,13 +1,11 @@
 'use client';
-import { addAppAction } from '@/actions/appActions';
+import { addAppAction } from '@/actions/appActions/appActions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { UserApps } from '@/types/types';
 import { User } from '@prisma/client';
 import { useState } from 'react';
-import { revalidatePath } from 'next/cache';
-import { set } from 'react-hook-form';
 import { faker } from '@faker-js/faker';
+import { appAction } from '@/actions/appActions/appAction';
 
 export function AddAppForm({ user }: { user: User }) {
   const [url, setUrl] = useState('');
@@ -27,7 +25,7 @@ export function AddAppForm({ user }: { user: User }) {
           const app2 = { ...app };
           if (!app.name) app2.name = faker.word.noun();
           if (!app.url) app2.url = faker.internet.url();
-          addAppAction({ userId: user.id, app: app2 });
+          appAction.addApp({ userId: user.id, app: app2 });
           setApp({ name: '', url: '' });
         }}
       >

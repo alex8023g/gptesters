@@ -1,4 +1,4 @@
-import { addUser, login } from './userActionsFunctions';
+import { addUser, login } from './userActions';
 
 export const userAction = {
   login,

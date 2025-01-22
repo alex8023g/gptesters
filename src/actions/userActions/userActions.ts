@@ -25,3 +25,16 @@ export async function addUser() {
   });
   redirect(`/user/${user.id}`);
 }
+
+export async function getUserById(id: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
+    return user;
+  } catch (err) {
+    if (err instanceof Error) {
+      console.error(err);
+    }
+  }
+}
