@@ -15,7 +15,7 @@ export default async function UserPage({
 
   const userWithHisApps = await prisma.user.findUnique({
     where: { id: params.userid },
-    include: { userApps: true },
+    include: { userApps: { orderBy: { createdAt: 'desc' } } },
   });
 
   // const appsForTesting = await appAction.getAppsForTestind({

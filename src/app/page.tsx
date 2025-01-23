@@ -6,6 +6,7 @@ import Image from 'next/image';
 export default async function HomePage() {
   const users = await prisma.user.findMany({});
   console.log('users:', users);
+
   return (
     <main className='flex h-full flex-col'>
       <div className='m-auto'>

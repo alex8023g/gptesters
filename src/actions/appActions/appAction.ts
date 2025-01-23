@@ -3,6 +3,7 @@ import {
   appInstalledByUser,
   getAppById,
   getAppsForTestind,
+  getTestersByAppId,
   getUserAppList,
 } from './appActions';
 
@@ -12,4 +13,5 @@ export const appAction = {
   getAppsForTestind,
   getAppById,
   getUserAppList,
+  getTestersByAppId,
 } as const;

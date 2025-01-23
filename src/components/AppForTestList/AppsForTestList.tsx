@@ -23,6 +23,13 @@ type Props = {
   appsForTesting: (App & {
     author: User;
     usersTesting: TestingApps[];
+    userAppTester:
+      | {
+          userId: string;
+          appId: string;
+          isInstalled: boolean;
+        }
+      | undefined;
   })[];
 };
 
@@ -35,6 +42,7 @@ export function AppForTestList({ userId, appsForTesting }: Props) {
         <TableHeader>
           <TableRow>
             <TableHead>user</TableHead>
+            <TableHead>comment</TableHead>
             <TableHead>app name</TableHead>
             <TableHead>app url</TableHead>
             <TableHead>become a tester</TableHead>

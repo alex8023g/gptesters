@@ -17,7 +17,17 @@ import {
 } from '@/actions/appActions/appActions';
 
 type Props = {
-  app: App & { usersTesting: TestingApps[]; author: User };
+  app: App & {
+    usersTesting: TestingApps[];
+    author: User;
+    userAppTester:
+      | {
+          userId: string;
+          appId: string;
+          isInstalled: boolean;
+        }
+      | undefined;
+  };
   userId: string;
 };
 
@@ -26,6 +36,10 @@ export function AppForTestItem({ app, userId }: Props) {
   return (
     <TableRow key={app.id} className=''>
       <TableCell className=''>{app.author.email}</TableCell>
+      <TableCell className=''>
+        {app.userAppTester?.userId ? ' is a tester for your app' : ''}
+        {app.userAppTester?.isInstalled ? ' & installed your app' : ''}
+      </TableCell>
       <TableCell className=''>{app.name}</TableCell>
       <TableCell>
         <Link href={app.url}>{app.url}</Link>

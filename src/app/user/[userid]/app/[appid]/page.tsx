@@ -12,12 +12,21 @@ export default async function AppPage({ params: { userid, appid } }: Props) {
   const userAppIndex = userAppList.findIndex((app) => app.id === appid);
   const appsForTesting = await appAction.getAppsForTestind({
     userId: userid,
+    userAppIndex,
+    appId: appid,
   });
+
+  const userAppTestersList = await appAction.getTestersByAppId(appid);
+
   return (
     <>
-      <h1>AppPage</h1>
-      <h2>user: {user?.email}</h2>
-      <h2>app: {userAppList[userAppIndex].name}</h2>
+      <h1 className='font-bold'>AppPage</h1>
+      <h2>
+        user: <span className='font-bold'>{user?.email}</span>
+      </h2>
+      <h2>
+        app: <span className='font-bold'>{userAppList[userAppIndex].name}</span>
+      </h2>
       <AppForTestList userId={userid} appsForTesting={appsForTesting} />
     </>
   );

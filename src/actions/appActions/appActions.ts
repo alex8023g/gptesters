@@ -66,7 +66,15 @@ export async function addAppforUserTesting({
   revalidatePath(`/user/${userId}`);
 }
 
-export async function getAppsForTestind({ userId }: { userId: string }) {
+export async function getAppsForTestind({
+  userId,
+  userAppIndex,
+  appId,
+}: {
+  userId: string;
+  userAppIndex: number;
+  appId: string;
+}) {
   const res = await prisma.app.findMany({
     where: {
       userId: { not: userId },
@@ -77,8 +85,28 @@ export async function getAppsForTestind({ userId }: { userId: string }) {
     },
     orderBy: { createdAt: 'desc' },
   });
-  console.dir(res);
-  return res;
+
+  const userAppTesters = await prisma.testingApps.findMany({
+    where: { appId },
+    // include: { user: true },
+  });
+
+  console.dir(res, { depth: Infinity });
+  const authorsList = new Set<string>();
+  res.forEach((app) => authorsList.add(app.author.id));
+  console.log('authorList:', authorsList);
+
+  let res2 = Array.from(authorsList).map((authorId) => {
+    const authorAppList = res.filter((app) => app.author.id === authorId);
+    const userAppTester = userAppTesters.find(
+      (appTesting) => appTesting.userId === authorId,
+    );
+    return { ...authorAppList[userAppIndex], userAppTester };
+  });
+
+  res2 = res2.filter((item) => item.id);
+  console.dir(res2, { depth: Infinity });
+  return res2;
 }
 
 export async function getAppById(id: string) {
@@ -91,5 +119,11 @@ export async function getUserAppList(userId: string) {
   return await prisma.app.findMany({
     where: { userId },
     orderBy: { createdAt: 'desc' },
+  });
+}
+
+export async function getTestersByAppId(appId: string) {
+  return await prisma.testingApps.findMany({
+    where: { appId },
   });
 }
