@@ -1,4 +1,4 @@
-import { App, TestingApps, User } from '@prisma/client';
+import { App, TestingAppsUsers, User } from '@prisma/client';
 import {
   Table,
   TableBody,
@@ -15,17 +15,36 @@ import {
   addAppforUserTesting,
   appInstalledByUser,
 } from '@/actions/appActions/appActions';
+import { prisma } from '@/lib/prisma';
+import { appAction } from '@/actions/appActions/appAction';
 
 type Props = {
-  app: App & { usersTesting: TestingApps[]; author: User };
+  app: App & {
+    testingAppsUsers: TestingAppsUsers[];
+    author: User;
+    authorAsUsersAppTester: TestingAppsUsers;
+  };
   userId: string;
+  // userWithHisApp: User & { userApp: App | null };
 };
 
 export function AppForTestItem({ app, userId }: Props) {
-  const isUserTester = app.usersTesting.find((item) => item.userId === userId);
+  // console.log('app:', app);
+  const isUserTester = app.testingAppsUsers?.find(
+    (item) => item.userId === userId,
+  );
+
   return (
     <TableRow key={app.id} className=''>
       <TableCell className=''>{app.author.email}</TableCell>
+      <TableCell className='flex flex-col text-green-700'>
+        {app.authorAsUsersAppTester?.userId && (
+          <span>is a tester your app </span>
+        )}
+        {app.authorAsUsersAppTester?.isInstalled && (
+          <span>installed your app</span>
+        )}
+      </TableCell>
       <TableCell className=''>{app.name}</TableCell>
       <TableCell>
         <Link href={app.url}>{app.url}</Link>
@@ -35,7 +54,10 @@ export function AppForTestItem({ app, userId }: Props) {
           <Button
             disabled
             onClick={async () => {
-              await addAppforUserTesting({ appId: app.id, userId });
+              await addAppforUserTesting({
+                appId: app.id,
+                userId: userId,
+              });
             }}
           >
             i'm a tester
@@ -43,7 +65,10 @@ export function AppForTestItem({ app, userId }: Props) {
         ) : (
           <Button
             onClick={async () => {
-              await addAppforUserTesting({ appId: app.id, userId });
+              await addAppforUserTesting({
+                appId: app.id,
+                userId: userId,
+              });
             }}
           >
             become a tester
@@ -61,13 +86,15 @@ export function AppForTestItem({ app, userId }: Props) {
       )}
       <TableCell>
         <Switch
-          disabled={!app.usersTesting.find((item) => item.userId === userId)}
+          disabled={
+            !app.testingAppsUsers.find((item) => item.userId === userId)
+          }
           checked={isUserTester?.isInstalled}
           onCheckedChange={async (e) => {
             console.log('e:', e);
             await appInstalledByUser({
               appId: app.id,
-              userId,
+              userId: userId,
               isInstalled: e,
             });
           }}

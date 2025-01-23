@@ -1,5 +1,5 @@
 'use client';
-import { App, TestingApps, User } from '@prisma/client';
+import { App, TestingAppsUsers, User } from '@prisma/client';
 import Link from 'next/link';
 import {
   Table,
@@ -20,9 +20,11 @@ import { AppForTestItem } from './AppForTestItem';
 
 type Props = {
   userId: string;
+  // userWithHisApp: User & { userApp: App | null };
   appsForTesting: (App & {
     author: User;
-    usersTesting: TestingApps[];
+    testingAppsUsers: TestingAppsUsers[];
+    authorAsUsersAppTester: TestingAppsUsers;
   })[];
 };
 
@@ -35,6 +37,7 @@ export function AppForTestList({ userId, appsForTesting }: Props) {
         <TableHeader>
           <TableRow>
             <TableHead>user</TableHead>
+            <TableHead>comment</TableHead>
             <TableHead>app name</TableHead>
             <TableHead>app url</TableHead>
             <TableHead>become a tester</TableHead>
@@ -44,7 +47,12 @@ export function AppForTestList({ userId, appsForTesting }: Props) {
         </TableHeader>
         <TableBody>
           {appsForTesting.map((app) => (
-            <AppForTestItem key={app.id} app={app} userId={userId} />
+            <AppForTestItem
+              key={app.id}
+              app={app}
+              userId={userId}
+              // userWithHisApp={userWithHisApp}
+            />
           ))}
         </TableBody>
       </Table>

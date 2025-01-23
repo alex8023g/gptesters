@@ -33,7 +33,7 @@ export async function appInstalledByUser({
   userId,
   isInstalled,
 }: AppInstalledByUserArg) {
-  const res = await prisma.testingApps.updateMany({
+  const res = await prisma.testingAppsUsers.updateMany({
     where: {
       appId,
       userId,
@@ -55,7 +55,7 @@ export async function addAppforUserTesting({
   appId,
   userId,
 }: AddAppforUserTestingArg) {
-  const res = await prisma.testingApps.create({
+  const res = await prisma.testingAppsUsers.create({
     data: {
       appId,
       userId,
@@ -66,19 +66,37 @@ export async function addAppforUserTesting({
   revalidatePath(`/user/${userId}`);
 }
 
-export async function getAppsForTestind({ userId }: { userId: string }) {
+export async function getAppsForTestind({
+  userId,
+  appId,
+}: {
+  userId: string;
+  appId: string | undefined;
+}) {
   const res = await prisma.app.findMany({
     where: {
       userId: { not: userId },
     },
     include: {
       author: true,
-      usersTesting: true,
+      testingAppsUsers: true,
     },
     orderBy: { createdAt: 'desc' },
   });
-  console.dir(res);
-  return res;
+  const res2 = await Promise.all(
+    res.map(async (app) => {
+      const authorAsUsersAppTester = await prisma.testingAppsUsers.findMany({
+        where: {
+          userId: app.author.id,
+          appId: appId,
+        },
+      });
+      return { ...app, authorAsUsersAppTester: authorAsUsersAppTester[0] };
+    }),
+  );
+  console.log('res2!!!');
+  console.dir(res2, { depth: Infinity });
+  return res2;
 }
 
 export async function getAppById(id: string) {
@@ -87,9 +105,9 @@ export async function getAppById(id: string) {
   });
 }
 
-export async function getUserAppList(userId: string) {
+export async function getUserAppList(id: string) {
   return await prisma.app.findMany({
-    where: { userId },
+    where: { id },
     orderBy: { createdAt: 'desc' },
   });
 }

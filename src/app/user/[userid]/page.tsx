@@ -5,39 +5,52 @@ import { UserAppsList } from '@/components/UserAppsList';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 import _ from 'lodash';
+import { userAction } from '@/actions/userActions/userAction';
+import Link from 'next/link';
 
 export default async function UserPage({
-  params,
+  params: { userid },
 }: {
   params: { userid: string };
 }) {
-  console.log(params.userid);
+  console.log(userid);
 
-  const userWithHisApps = await prisma.user.findUnique({
-    where: { id: params.userid },
-    include: { userApps: true },
+  const userWithHisApp = await userAction.getUserByIdWithApp(userid);
+  if (!userWithHisApp) redirect('/');
+
+  const appsForTesting = await appAction.getAppsForTestind({
+    userId: userid,
+    appId: userWithHisApp?.userApp?.id,
   });
 
-  // const appsForTesting = await appAction.getAppsForTestind({
-  //   userId: params.userid,
-  // });
-
-  if (!userWithHisApps) redirect('/');
   return (
     <main className='px-3'>
       <h1 className='font-bold'>UserPage</h1>
       <div>
-        <span>ваш email: </span>
-        <span>{userWithHisApps?.email}</span>
+        <span>your email: </span>
+        <span>{userWithHisApp?.email}</span>
       </div>
       <div>
-        <h2>добавьте приложение для тестирования</h2>
-        <AddAppForm user={userWithHisApps} />
-        <UserAppsList userWithApps={userWithHisApps} />
-        {/* <AppForTestList
-          userId={params.userid}
-          appsForTesting={appsForTesting}
-        /> */}
+        {userWithHisApp.userApp ? (
+          <>
+            <h2>
+              your application:{' '}
+              <Link href={userWithHisApp.userApp.url} className='underline'>
+                {userWithHisApp.userApp.name}
+              </Link>
+            </h2>
+            <AppForTestList
+              userId={userid}
+              // userWithHisApp={userWithHisApp}
+              appsForTesting={appsForTesting}
+            />
+          </>
+        ) : (
+          <>
+            <h2>добавьте приложение для тестирования</h2>
+            <AddAppForm user={userWithHisApp} />
+          </>
+        )}
       </div>
     </main>
   );

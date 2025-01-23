@@ -27,14 +27,15 @@ export async function addUser() {
 }
 
 export async function getUserById(id: string) {
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id },
-    });
-    return user;
-  } catch (err) {
-    if (err instanceof Error) {
-      console.error(err);
-    }
-  }
+  const user = await prisma.user.findUnique({
+    where: { id },
+  });
+  return user;
+}
+
+export async function getUserByIdWithApp(id: string) {
+  return prisma.user.findUnique({
+    where: { id },
+    include: { userApp: true },
+  });
 }
