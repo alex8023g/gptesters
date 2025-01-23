@@ -6,17 +6,21 @@ import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 import _ from 'lodash';
 
-export default async function UserPage({ params }: { params: { id: string } }) {
-  console.log(params.id);
+export default async function UserPage({
+  params,
+}: {
+  params: { userid: string };
+}) {
+  console.log(params.userid);
 
   const userWithHisApps = await prisma.user.findUnique({
-    where: { id: params.id },
+    where: { id: params.userid },
     include: { userApps: true },
   });
 
-  const appsForTesting = await appAction.getAppsForTestind({
-    userId: params.id,
-  });
+  // const appsForTesting = await appAction.getAppsForTestind({
+  //   userId: params.userid,
+  // });
 
   if (!userWithHisApps) redirect('/');
   return (
@@ -30,12 +34,10 @@ export default async function UserPage({ params }: { params: { id: string } }) {
         <h2>добавьте приложение для тестирования</h2>
         <AddAppForm user={userWithHisApps} />
         <UserAppsList userWithApps={userWithHisApps} />
-        <AppForTestList
-          // allApps={allApps.filter((app) => app.userId !== params.id)}
-          userId={params.id}
-          // user={_.pick(userWithHisApps, ['id', 'name', 'email'])}
+        {/* <AppForTestList
+          userId={params.userid}
           appsForTesting={appsForTesting}
-        />
+        /> */}
       </div>
     </main>
   );

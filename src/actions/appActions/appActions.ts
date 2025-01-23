@@ -77,5 +77,19 @@ export async function getAppsForTestind({ userId }: { userId: string }) {
     },
     orderBy: { createdAt: 'desc' },
   });
+  console.dir(res);
   return res;
+}
+
+export async function getAppById(id: string) {
+  return await prisma.app.findUnique({
+    where: { id },
+  });
+}
+
+export async function getUserAppList(userId: string) {
+  return await prisma.app.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+  });
 }
