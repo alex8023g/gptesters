@@ -19,11 +19,14 @@ import {
 } from '@/actions/appActions/appActions';
 import { AppForTestItem } from './AppForTestItem';
 import { useEffect, useState } from 'react';
+import { revalidatePath } from 'next/cache';
+import { appAction } from '@/actions/appActions/appAction';
 
 type Props = {
   userId: string;
   appId: string;
   userAppTesters: TestingAppsUsers[];
+  notUserAppList: App[];
   // userWithHisApp: User & { userApp: App | null };
   appsForTesting: (App & {
     author: User;
@@ -37,22 +40,26 @@ export function AppForTestList({
   appId,
   userAppTesters,
   appsForTesting,
+  notUserAppList,
 }: Props) {
-  const [userAppTestersSt, setUserAppTestersSt] = useState(userAppTesters);
+  // const [userAppTestersSt, setUserAppTestersSt] = useState(userAppTesters);
   useEffect(() => {
     const interval = setInterval(async () => {
-      const userAppTestersUpd = await getUserAppTesters(appId);
+      const userAppTestersUpd = await appAction.getUserAppTesters(appId);
+      const notUserAppListUpd = await appAction.getNotUserAppList(userId);
       if (
-        JSON.stringify(userAppTestersUpd) !== JSON.stringify(userAppTestersSt)
+        JSON.stringify(userAppTestersUpd) !== JSON.stringify(userAppTesters) ||
+        JSON.stringify(notUserAppListUpd) !== JSON.stringify(notUserAppList)
       ) {
-        setUserAppTestersSt(userAppTestersUpd);
-        console.log('userAppTestersSt:', userAppTestersSt);
+        // setUserAppTestersSt(userAppTestersUpd);
+        console.log('notUserAppListUpd:', notUserAppListUpd, notUserAppList);
+        appAction.revalidatePathUser(`/user/${userId}`);
       }
     }, 3000);
     return () => {
       clearInterval(interval);
     };
-  }, [userAppTestersSt]);
+  }, [userAppTesters, notUserAppList]);
   return (
     <>
       <h1 className='font-bold'>AppsForTestList:</h1>

@@ -7,7 +7,6 @@ import { redirect } from 'next/navigation';
 import _ from 'lodash';
 import { userAction } from '@/actions/userActions/userAction';
 import Link from 'next/link';
-import { getUserAppTesters } from '@/actions/appActions/appActions';
 
 export const revalidate = 1;
 export const dynamic = 'force-dynamic';
@@ -25,9 +24,11 @@ export default async function UserPage({
     appId: userWithHisApp?.userApp?.id,
   });
 
-  const userAppTesters = userWithHisApp?.userApp?.id
-    ? await getUserAppTesters(userWithHisApp?.userApp?.id)
-    : [];
+  const userAppTesters = await appAction.getUserAppTesters(
+    userWithHisApp.userApp?.id,
+  );
+  const notUserAppList = await appAction.getNotUserAppList(userWithHisApp.id);
+  console.log(userWithHisApp.id, 'notUserAppList:', notUserAppList);
 
   return (
     <main className='px-3'>
@@ -49,6 +50,7 @@ export default async function UserPage({
               userId={userid}
               appId={userWithHisApp.userApp.id}
               userAppTesters={userAppTesters}
+              notUserAppList={notUserAppList}
               // userWithHisApp={userWithHisApp}
               appsForTesting={appsForTesting}
             />

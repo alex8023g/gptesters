@@ -66,6 +66,12 @@ export async function addAppforUserTesting({
   revalidatePath(`/user/${userId}`);
 }
 
+export async function getNotUserAppList(userId: string | undefined) {
+  return prisma.app.findMany({
+    where: { userId: { not: userId } },
+  });
+}
+
 export async function getAppsForTestind({
   userId,
   appId,
@@ -112,8 +118,12 @@ export async function getUserAppList(id: string) {
   });
 }
 
-export async function getUserAppTesters(appId: string) {
+export async function getUserAppTesters(appId: string | undefined) {
   return await prisma.testingAppsUsers.findMany({
     where: { appId },
   });
+}
+
+export async function revalidatePathUser(userId: string) {
+  revalidatePath(`/user/${userId}`, 'page');
 }
