@@ -15,11 +15,15 @@ import { Switch } from '@/components/ui/switch';
 import {
   addAppforUserTesting,
   appInstalledByUser,
+  getUserAppTesters,
 } from '@/actions/appActions/appActions';
 import { AppForTestItem } from './AppForTestItem';
+import { useEffect, useState } from 'react';
 
 type Props = {
   userId: string;
+  appId: string;
+  userAppTesters: TestingAppsUsers[];
   // userWithHisApp: User & { userApp: App | null };
   appsForTesting: (App & {
     author: User;
@@ -28,7 +32,27 @@ type Props = {
   })[];
 };
 
-export function AppForTestList({ userId, appsForTesting }: Props) {
+export function AppForTestList({
+  userId,
+  appId,
+  userAppTesters,
+  appsForTesting,
+}: Props) {
+  const [userAppTestersSt, setUserAppTestersSt] = useState(userAppTesters);
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const userAppTestersUpd = await getUserAppTesters(appId);
+      if (
+        JSON.stringify(userAppTestersUpd) !== JSON.stringify(userAppTestersSt)
+      ) {
+        setUserAppTestersSt(userAppTestersUpd);
+        console.log('userAppTestersSt:', userAppTestersSt);
+      }
+    }, 3000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [userAppTestersSt]);
   return (
     <>
       <h1 className='font-bold'>AppsForTestList:</h1>

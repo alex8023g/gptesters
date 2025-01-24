@@ -111,3 +111,9 @@ export async function getUserAppList(id: string) {
     orderBy: { createdAt: 'desc' },
   });
 }
+
+export async function getUserAppTesters(appId: string) {
+  return await prisma.testingAppsUsers.findMany({
+    where: { appId },
+  });
+}

@@ -37,12 +37,12 @@ export function AppForTestItem({ app, userId }: Props) {
   return (
     <TableRow key={app.id} className=''>
       <TableCell className=''>{app.author.email}</TableCell>
-      <TableCell className='flex flex-col text-green-700'>
+      <TableCell className='text-green-700'>
         {app.authorAsUsersAppTester?.userId && (
-          <span>is a tester your app </span>
+          <span className='inline-block'>is a your app tester</span>
         )}
         {app.authorAsUsersAppTester?.isInstalled && (
-          <span>installed your app</span>
+          <span className='inline-block'>installed your app</span>
         )}
       </TableCell>
       <TableCell className=''>{app.name}</TableCell>
