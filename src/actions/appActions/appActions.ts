@@ -73,7 +73,7 @@ export async function getNotUserAppList(userId: string | undefined) {
   });
 }
 
-export async function getAppsForTestind({
+export async function getAppsForTesting({
   userId,
   appId,
 }: {
@@ -88,7 +88,7 @@ export async function getAppsForTestind({
       author: true,
       testingAppsUsers: true,
     },
-    orderBy: { createdAt: 'desc' },
+    orderBy: { createdAt: 'asc' },
   });
   const res2 = await Promise.all(
     res.map(async (app) => {

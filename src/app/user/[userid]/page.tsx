@@ -17,7 +17,7 @@ export default async function UserPage({
   const userWithHisApp = await userAction.getUserByIdWithApp(userid);
   if (!userWithHisApp) redirect('/');
 
-  const appsForTesting = await appAction.getAppsForTestind({
+  const appsForTesting = await appAction.getAppsForTesting({
     userId: userid,
     appId: userWithHisApp?.userApp?.id,
   });

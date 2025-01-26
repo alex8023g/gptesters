@@ -3,7 +3,7 @@ import {
   appInstalledByUser,
   checkAndRevalidateUserPage,
   getAppById,
-  getAppsForTestind,
+  getAppsForTesting,
   getNotUserAppList,
   getUserAppList,
   getUserAppTesters,
@@ -14,7 +14,7 @@ import {
 export const appAction = {
   addApp: addAppAction,
   appInstalledByUser,
-  getAppsForTestind,
+  getAppsForTesting,
   getAppById,
   getUserAppList,
   revalidatePathUser,
