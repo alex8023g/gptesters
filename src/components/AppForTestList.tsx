@@ -43,7 +43,7 @@ export function AppForTestList({
     return () => {
       clearInterval(interval);
     };
-  }, [userAppTesters, notUserAppList]);
+  }, [userAppTesters, notUserAppList, appId, userId]);
   return (
     <>
       <h1 className=''>AppsForTestList:</h1>

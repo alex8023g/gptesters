@@ -1,5 +1,3 @@
-import { TestingApps } from '@prisma/client';
-
 export type UserWithApps = {
   name: string | null;
   id: string;
