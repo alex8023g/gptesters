@@ -1,5 +1,4 @@
 'use client';
-import { addAppAction } from '@/actions/appActions/appActions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { User } from '@prisma/client';
@@ -8,7 +7,6 @@ import { faker } from '@faker-js/faker';
 import { appAction } from '@/actions/appActions/appAction';
 
 export function AddAppForm({ user }: { user: User }) {
-  const [url, setUrl] = useState('');
   const [app, setApp] = useState({ name: '', url: '' });
   return (
     <div className='flex w-full max-w-sm items-center space-x-2'>

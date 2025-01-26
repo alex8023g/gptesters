@@ -1,12 +1,14 @@
 import {
   addAppAction,
   appInstalledByUser,
+  checkAndRevalidateUserPage,
   getAppById,
   getAppsForTestind,
   getNotUserAppList,
   getUserAppList,
   getUserAppTesters,
   revalidatePathUser,
+  getUserAppTestersEmails,
 } from './appActions';
 
 export const appAction = {
@@ -18,4 +20,6 @@ export const appAction = {
   revalidatePathUser,
   getNotUserAppList,
   getUserAppTesters,
+  checkAndRevalidateUserPage,
+  getUserAppTestersEmails,
 } as const;

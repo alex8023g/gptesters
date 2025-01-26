@@ -1,5 +1,6 @@
 'use server';
 import { prisma } from '@/lib/prisma';
+import { App, TestingAppsUsers } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
 type AddAppActionArg = {
@@ -106,24 +107,67 @@ export async function getAppsForTestind({
 }
 
 export async function getAppById(id: string) {
-  return await prisma.app.findUnique({
+  return prisma.app.findUnique({
     where: { id },
   });
 }
 
 export async function getUserAppList(id: string) {
-  return await prisma.app.findMany({
+  return prisma.app.findMany({
     where: { id },
     orderBy: { createdAt: 'desc' },
   });
 }
 
 export async function getUserAppTesters(appId: string | undefined) {
-  return await prisma.testingAppsUsers.findMany({
+  return prisma.testingAppsUsers.findMany({
     where: { appId },
   });
 }
 
+export async function getUserAppTestersEmails(appId: string | undefined) {
+  const userAppTestersWithUserData = await prisma.testingAppsUsers.findMany({
+    where: { appId },
+    select: {
+      user: {
+        select: { email: true },
+      },
+    },
+  });
+
+  return userAppTestersWithUserData.map((item) => item.user.email);
+}
+
 export async function revalidatePathUser(userId: string) {
   revalidatePath(`/user/${userId}`, 'page');
+}
+
+type CheckAndRevalidateUserPageArg = {
+  userId: string;
+  appId: string;
+  notUserAppList: App[];
+  userAppTesters: TestingAppsUsers[];
+};
+
+export async function checkAndRevalidateUserPage({
+  userId,
+  appId,
+  notUserAppList,
+  userAppTesters,
+}: CheckAndRevalidateUserPageArg) {
+  const notUserAppListUpd = await prisma.app.findMany({
+    where: { userId: { not: userId } },
+  });
+
+  const userAppTestersUpd = await prisma.testingAppsUsers.findMany({
+    where: { appId },
+  });
+
+  if (
+    JSON.stringify(userAppTestersUpd) !== JSON.stringify(userAppTesters) ||
+    JSON.stringify(notUserAppListUpd) !== JSON.stringify(notUserAppList)
+  ) {
+    console.log('notUserAppListUpd:', notUserAppListUpd, notUserAppList);
+    revalidatePath(`/user/${userId}`);
+  }
 }

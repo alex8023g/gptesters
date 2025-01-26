@@ -1,12 +1,10 @@
 import { appAction } from '@/actions/appActions/appAction';
 import { AddAppForm } from '@/components/AddAppForm';
-import { AppForTestList } from '@/components/AppForTestList/AppsForTestList';
-import { UserAppsList } from '@/components/UserAppsList';
-import { prisma } from '@/lib/prisma';
+import { AppForTestList } from '@/components/AppForTestList';
 import { redirect } from 'next/navigation';
-import _ from 'lodash';
 import { userAction } from '@/actions/userActions/userAction';
 import Link from 'next/link';
+import { ExportTesterListToCsvBtn } from '@/components/ExportTesterListToCsvBtn';
 
 export const revalidate = 1;
 export const dynamic = 'force-dynamic';
@@ -27,25 +25,35 @@ export default async function UserPage({
   const userAppTesters = await appAction.getUserAppTesters(
     userWithHisApp.userApp?.id,
   );
-  const notUserAppList = await appAction.getNotUserAppList(userWithHisApp.id);
+  const notUserAppList = await appAction.getNotUserAppList(userid);
   console.log(userWithHisApp.id, 'notUserAppList:', notUserAppList);
+
+  const userAppTestersEmails = await appAction.getUserAppTestersEmails(
+    userWithHisApp.userApp?.id,
+  );
 
   return (
     <main className='px-3'>
-      <h1 className='font-bold'>UserPage</h1>
+      <h1 className=''>UserPage</h1>
       <div>
         <span>your email: </span>
-        <span>{userWithHisApp?.email}</span>
+        <span className='font-bold'>{userWithHisApp?.email}</span>
       </div>
       <div>
         {userWithHisApp.userApp ? (
           <>
-            <h2>
+            <h2 className='mb-3'>
               your application:{' '}
-              <Link href={userWithHisApp.userApp.url} className='underline'>
+              <Link
+                href={userWithHisApp.userApp.url}
+                className='font-bold underline'
+              >
                 {userWithHisApp.userApp.name}
               </Link>
             </h2>
+            <ExportTesterListToCsvBtn
+              userAppTestersEmails={userAppTestersEmails}
+            />
             <AppForTestList
               userId={userid}
               appId={userWithHisApp.userApp.id}

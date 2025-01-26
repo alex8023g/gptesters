@@ -1,22 +1,12 @@
 import { App, TestingAppsUsers, User } from '@prisma/client';
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Button } from '../ui/button';
+import { TableCell, TableRow } from '@/components/ui/table';
+import { Button } from './ui/button';
 import { Switch } from '@/components/ui/switch';
 import Link from 'next/link';
 import {
   addAppforUserTesting,
   appInstalledByUser,
 } from '@/actions/appActions/appActions';
-import { prisma } from '@/lib/prisma';
-import { appAction } from '@/actions/appActions/appAction';
 
 type Props = {
   app: App & {
@@ -45,6 +35,9 @@ export function AppForTestItem({ app, userId }: Props) {
           <span className='inline-block'>installed your app</span>
         )}
       </TableCell>
+      <TableCell>
+        <Switch />
+      </TableCell>
       <TableCell className=''>{app.name}</TableCell>
       <TableCell>
         <Link href={app.url}>{app.url}</Link>
@@ -60,7 +53,7 @@ export function AppForTestItem({ app, userId }: Props) {
               });
             }}
           >
-            i'm a tester
+            i&apos;m a tester
           </Button>
         ) : (
           <Button
@@ -80,7 +73,9 @@ export function AppForTestItem({ app, userId }: Props) {
           please install app on phone
         </TableCell>
       ) : isUserTester && isUserTester.isInstalled ? (
-        <TableCell className='text-red-600'>please don't remove app</TableCell>
+        <TableCell className='text-red-600'>
+          please don&apos;t remove app
+        </TableCell>
       ) : (
         <TableCell></TableCell>
       )}
