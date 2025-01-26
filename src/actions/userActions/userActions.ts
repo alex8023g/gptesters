@@ -33,6 +33,10 @@ export async function getUserById(id: string) {
   return user;
 }
 
+export async function getAllUserList() {
+  return prisma.user.findMany();
+}
+
 export async function getUserByIdWithApp(id: string) {
   return prisma.user.findUnique({
     where: { id },
