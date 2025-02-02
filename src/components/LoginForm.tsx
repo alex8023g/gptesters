@@ -27,8 +27,7 @@ export function LoginForm() {
         <Button
           // type='submit'
           onClick={async () => {
-            const res = await userAction.login(email);
-            console.log('res:', res);
+            await userAction.login(email);
           }}
         >
           login

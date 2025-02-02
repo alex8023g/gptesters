@@ -53,7 +53,7 @@ export function AppForTestList({
           <TableRow>
             <TableHead>user</TableHead>
             <TableHead>comment</TableHead>
-            <TableHead>add as a tester to gpc</TableHead>
+            {/* <TableHead>add as a tester to gpc</TableHead> */}
             <TableHead>app name</TableHead>
             <TableHead>app url</TableHead>
             <TableHead>become a tester</TableHead>

@@ -12,14 +12,14 @@ type AddAppActionArg = {
 };
 
 export async function addAppAction({ userId, app }: AddAppActionArg) {
-  const res = await prisma.app.create({
+  await prisma.app.create({
     data: {
       name: app.name,
       url: app.url,
       userId,
     },
   });
-  console.log('res:', res);
+
   revalidatePath(`/user/${userId}`);
 }
 
@@ -34,16 +34,37 @@ export async function appInstalledByUser({
   userId,
   isInstalled,
 }: AppInstalledByUserArg) {
-  const res = await prisma.testingAppsUsers.updateMany({
+  await prisma.testingAppsUsers.update({
     where: {
-      appId,
-      userId,
+      appId_userId: {
+        appId,
+        userId,
+      },
     },
     data: {
       isInstalled,
     },
   });
-  console.log('res:', res);
+
+  const amountAppInstalled = await prisma.testingAppsUsers
+    .findMany({
+      where: { appId },
+    })
+    .then((appInstalled) => appInstalled.filter((app) => app.isInstalled));
+
+  // console.log('🚀 ~ amountAppInstalled:', amountAppInstalled.length);
+  if (amountAppInstalled.length >= 12) {
+    await prisma.app.update({
+      where: { id: appId },
+      data: { hasTwelveInstallations: true },
+    });
+  } else {
+    await prisma.app.update({
+      where: { id: appId },
+      data: { hasTwelveInstallations: false },
+    });
+  }
+
   revalidatePath(`/user/${userId}`);
 }
 
@@ -56,14 +77,14 @@ export async function addAppforUserTesting({
   appId,
   userId,
 }: AddAppforUserTestingArg) {
-  const res = await prisma.testingAppsUsers.create({
+  await prisma.testingAppsUsers.create({
     data: {
       appId,
       userId,
       isInstalled: false,
     },
   });
-  console.log('res:', res);
+
   revalidatePath(`/user/${userId}`);
 }
 
@@ -101,8 +122,8 @@ export async function getAppsForTesting({
       return { ...app, authorAsUsersAppTester: authorAsUsersAppTester[0] };
     }),
   );
-  console.log('res2!!!');
-  console.dir(res2, { depth: Infinity });
+  // console.log('res2!!!');
+  // console.dir(res2, { depth: Infinity });
   return res2;
 }
 
@@ -138,6 +159,65 @@ export async function getUserAppTestersEmails(appId: string | undefined) {
   return userAppTestersWithUserData.map((item) => item.user.email);
 }
 
+export async function isNotAddedTesters(appId: string) {
+  const userAppTesters = await prisma.testingAppsUsers.findMany({
+    where: { appId },
+  });
+
+  return userAppTesters.some((item) => !item.addedAsTester);
+}
+
+export async function addAsTester({
+  appId,
+  userId,
+}: {
+  appId: string;
+  userId: string;
+}) {
+  await prisma.testingAppsUsers.updateMany({
+    where: {
+      appId,
+    },
+    data: { addedAsTester: true },
+  });
+  revalidatePath(`/user/${userId}`, 'page');
+}
+
+export async function getAllTesterEmails({
+  userId,
+  // appId,
+}: {
+  userId: string;
+  // appId: string;
+}) {
+  const allTesters = await prisma.user.findMany({
+    where: { id: { not: userId } },
+  });
+
+  return allTesters.map((item) => item.email);
+}
+
+export async function addUsersAsTesters({
+  userId,
+  appId,
+}: {
+  userId: string;
+  appId: string;
+}) {
+  const allTesters = await prisma.user.findMany({
+    where: { id: { not: userId } },
+  });
+
+  await prisma.testingAppsUsers.createMany({
+    data: allTesters.map((user) => ({
+      appId,
+      userId: user.id,
+    })),
+    skipDuplicates: true,
+  });
+  revalidatePath(`/user/${userId}`, 'page');
+}
+
 export async function revalidatePathUser(userId: string) {
   revalidatePath(`/user/${userId}`, 'page');
 }
@@ -167,7 +247,25 @@ export async function checkAndRevalidateUserPage({
     JSON.stringify(userAppTestersUpd) !== JSON.stringify(userAppTesters) ||
     JSON.stringify(notUserAppListUpd) !== JSON.stringify(notUserAppList)
   ) {
-    console.log('notUserAppListUpd:', notUserAppListUpd, notUserAppList);
+    // console.log('notUserAppListUpd:', notUserAppListUpd, notUserAppList);
     revalidatePath(`/user/${userId}`);
   }
+}
+
+export async function markAppHasEnoughInstalls({
+  appId,
+  userId,
+  hasEnoughInstallations,
+}: {
+  appId: string;
+  userId: string;
+  hasEnoughInstallations: boolean;
+}) {
+  await prisma.app.update({
+    where: { id: appId },
+    data: {
+      hasEnoughInstallations,
+    },
+  });
+  revalidatePath(`/user/${userId}`);
 }

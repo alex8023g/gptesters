@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { faker } from '@faker-js/faker';
 
 export async function login(email: string) {
-  console.log(email);
+  // console.log(email);
   const user = await prisma.user.findUnique({
     where: { email },
   });

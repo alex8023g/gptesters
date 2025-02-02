@@ -2,7 +2,6 @@ import { User } from '@prisma/client';
 import Link from 'next/link';
 
 export function UsersList({ users }: { users: User[] }) {
-  console.log('users!:', users);
   return (
     <>
       <h1 className='font-bold'>UsersList:</h1>

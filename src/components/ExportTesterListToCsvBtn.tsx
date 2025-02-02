@@ -1,17 +1,28 @@
 'use client';
+import { appAction } from '@/actions/appActions/appAction';
 import { Button } from './ui/button';
 import dayjs from 'dayjs';
 
 type Props = {
-  userAppTestersEmails: string[];
+  allTestersEmails: string[];
+  userId: string;
+  appId: string;
 };
-export function ExportTesterListToCsvBtn({ userAppTestersEmails }: Props) {
+export function ExportTesterListToCsvBtn({
+  allTestersEmails,
+  userId,
+  appId,
+}: Props) {
   return (
     <>
       <Button
         onClick={() => {
-          console.log('save file');
-          const data = userAppTestersEmails.join('\n');
+          appAction.addUsersAsTesters({
+            userId,
+            appId,
+          });
+          // console.log('save file');
+          const data = allTestersEmails.join('\n');
           const file = new Blob([data], { type: 'text/csv' });
           const a = document.createElement('a');
           const url = URL.createObjectURL(file);

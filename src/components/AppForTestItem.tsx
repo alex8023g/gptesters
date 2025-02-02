@@ -1,12 +1,9 @@
 import { App, TestingAppsUsers, User } from '@prisma/client';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { Button } from './ui/button';
 import { Switch } from '@/components/ui/switch';
 import Link from 'next/link';
-import {
-  addAppforUserTesting,
-  appInstalledByUser,
-} from '@/actions/appActions/appActions';
+
+import { appAction } from '@/actions/appActions/appAction';
 
 type Props = {
   app: App & {
@@ -27,23 +24,43 @@ export function AppForTestItem({ app, userId }: Props) {
   return (
     <TableRow key={app.id} className=''>
       <TableCell className=''>{app.author.email}</TableCell>
-      <TableCell className='text-green-700'>
-        {app.authorAsUsersAppTester?.userId && (
-          <span className='inline-block'>is a your app tester</span>
+      <TableCell className=''>
+        {app.authorAsUsersAppTester?.addedAsTester ? (
+          app.authorAsUsersAppTester?.isInstalled ? (
+            <span className='inline-block text-green-700'>
+              installed your app
+            </span>
+          ) : (
+            <span className='inline-block text-gray-400'>
+              added as your app tester
+            </span>
+          )
+        ) : (
+          <span className='inline-block text-orange-500'>
+            not added as a tester yet
+          </span>
         )}
-        {app.authorAsUsersAppTester?.isInstalled && (
-          <span className='inline-block'>installed your app</span>
-        )}
+        {/* {app.authorAsUsersAppTester?.isInstalled && (
+          <span className='inline-block text-green-700'>
+            installed your app
+          </span>
+        )} */}
       </TableCell>
-      <TableCell>
+      {/* <TableCell>
         <Switch />
-      </TableCell>
+      </TableCell> */}
       <TableCell className=''>{app.name}</TableCell>
       <TableCell>
-        <Link href={app.url}>{app.url}</Link>
+        {Boolean(isUserTester) ? (
+          <Link href={app.url} className='underline'>
+            {app.url}
+          </Link>
+        ) : (
+          <span className='text-gray-400'>{app.url}</span>
+        )}
       </TableCell>
       <TableCell>
-        {Boolean(isUserTester) ? (
+        {/* {Boolean(isUserTester) ? (
           <Button
             disabled
             onClick={async () => {
@@ -66,6 +83,11 @@ export function AppForTestItem({ app, userId }: Props) {
           >
             become a tester
           </Button>
+        )} */}
+        {Boolean(isUserTester) ? (
+          <span>you added as a tester</span>
+        ) : (
+          <span className='text-gray-400'>you Not added as a tester yet</span>
         )}
       </TableCell>
       {isUserTester && !isUserTester.isInstalled ? (
@@ -86,8 +108,8 @@ export function AppForTestItem({ app, userId }: Props) {
           }
           checked={isUserTester?.isInstalled}
           onCheckedChange={async (e) => {
-            console.log('e:', e);
-            await appInstalledByUser({
+            // console.log('e:', e);
+            await appAction.appInstalledByUser({
               appId: app.id,
               userId: userId,
               isInstalled: e,

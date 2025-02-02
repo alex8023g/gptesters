@@ -9,7 +9,7 @@ import { appAction } from '@/actions/appActions/appAction';
 export function AddAppForm({ user }: { user: User }) {
   const [app, setApp] = useState({ name: '', url: '' });
   return (
-    <div className='flex w-full max-w-sm items-center space-x-2'>
+    <div className='my-4 flex w-full max-w-sm items-center space-x-2'>
       <Input
         type='url'
         placeholder='link to App in Google play console'

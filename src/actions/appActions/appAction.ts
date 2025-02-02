@@ -9,6 +9,11 @@ import {
   getUserAppTesters,
   revalidatePathUser,
   getUserAppTestersEmails,
+  getAllTesterEmails,
+  addUsersAsTesters,
+  isNotAddedTesters,
+  addAsTester,
+  markAppHasEnoughInstalls,
 } from './appActions';
 
 export const appAction = {
@@ -22,4 +27,9 @@ export const appAction = {
   getUserAppTesters,
   checkAndRevalidateUserPage,
   getUserAppTestersEmails,
+  getAllTesterEmails,
+  addUsersAsTesters,
+  isNotAddedTesters,
+  addAsTester,
+  markAppHasEnoughInstalls,
 } as const;

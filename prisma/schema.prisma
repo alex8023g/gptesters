@@ -22,21 +22,24 @@ model User {
 }
 
 model App {
-  id               String             @id @default(ulid())
-  name             String
-  url              String
-  createdAt        DateTime           @default(now())
-  author           User               @relation(fields: [userId], references: [id])
-  userId           String             @unique
-  testingAppsUsers TestingAppsUsers[]
+  id                     String             @id @default(ulid())
+  name                   String
+  url                    String
+  createdAt              DateTime           @default(now())
+  author                 User               @relation(fields: [userId], references: [id])
+  userId                 String             @unique
+  testingAppsUsers       TestingAppsUsers[]
+  hasEnoughInstallations Boolean            @default(false)
+  hasTwelveInstallations Boolean            @default(false)
 }
 
 model TestingAppsUsers {
-  app         App     @relation(fields: [appId], references: [id])
-  appId       String
-  user        User    @relation(fields: [userId], references: [id])
-  userId      String
-  isInstalled Boolean
+  app           App     @relation(fields: [appId], references: [id])
+  appId         String
+  user          User    @relation(fields: [userId], references: [id])
+  userId        String
+  isInstalled   Boolean @default(false)
+  addedAsTester Boolean @default(false)
 
   @@id([appId, userId])
 }
