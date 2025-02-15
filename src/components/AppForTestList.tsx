@@ -20,7 +20,7 @@ type Props = {
   appsForTesting: (App & {
     author: User;
     testingAppsUsers: TestingAppsUsers[];
-    authorAsUsersAppTester: TestingAppsUsers;
+    authorAsUsersAppTester: TestingAppsUsers | null;
   })[];
 };
 

@@ -9,7 +9,7 @@ type Props = {
   app: App & {
     testingAppsUsers: TestingAppsUsers[];
     author: User;
-    authorAsUsersAppTester: TestingAppsUsers;
+    authorAsUsersAppTester: TestingAppsUsers | null;
   };
   userId: string;
   // userWithHisApp: User & { userApp: App | null };

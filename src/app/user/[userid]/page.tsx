@@ -8,7 +8,18 @@ import { ExportTesterListToCsvBtn } from '@/components/ExportTesterListToCsvBtn'
 import { AddAsTestersBtn } from '@/components/AddAsTestersBtn';
 import { TestingAppsUsers } from '@prisma/client';
 import Image from 'next/image';
-import { HasEnoughInstallationsSwitch } from '@/components/HasEnaughInstallationsSwitch';
+import { HasEnoughInstallationsSwitch } from '@/components/HasEnoughInstallationsSwitch';
+
+export async function generateMetadata({
+  params: { userid },
+}: {
+  params: { userid: string };
+}) {
+  const userWithHisApp = await userAction.getUserByIdWithApp(userid);
+  return {
+    title: userWithHisApp?.email,
+  };
+}
 
 export const revalidate = 1;
 export const dynamic = 'force-dynamic';
@@ -21,13 +32,37 @@ export default async function UserPage({
   const userWithHisApp = await userAction.getUserByIdWithApp(userid);
   if (!userWithHisApp) redirect('/');
 
+  if (!userWithHisApp.userApp) {
+    return (
+      <>
+        <h2>add link to app from google play console</h2>
+        <p>
+          example: https://play.google.com/store/apps/details?id=todo.cap.v1.com
+        </p>
+        <AddAppForm user={userWithHisApp} />
+        <Image
+          src={'/img/testerspage.png'}
+          width={1000}
+          height={1000}
+          alt='screenshot'
+        />
+      </>
+    );
+  }
+
   const appsForTesting = await appAction.getAppsForTesting({
     userId: userid,
-    appId: userWithHisApp.userApp?.id,
+    appId: userWithHisApp.userApp.id,
   });
+  // const appsForTesting = userWithHisApp.userApp
+  //   ? await appAction.getAppsForTesting({
+  //       userId: userid,
+  //       appId: userWithHisApp.userApp.id,
+  //     })
+  //   : [];
 
   const userAppTesters = await appAction.getUserAppTesters(
-    userWithHisApp.userApp?.id,
+    userWithHisApp.userApp.id,
   );
 
   const installsAmount = userAppTesters.reduce(
@@ -72,7 +107,7 @@ export default async function UserPage({
                 >
                   {userWithHisApp.userApp.name}
                 </Link>
-                {/* <span>appId: {userWithHisApp.userApp.id}</span> */}
+                <span> appId: {userWithHisApp.userApp.id}</span>
               </div>
               <div className=''>
                 installed:
@@ -90,6 +125,7 @@ export default async function UserPage({
               userId={userid}
             />
             <p>export testers list to csv and add to google play console</p>
+
             <ExportTesterListToCsvBtn
               allTestersEmails={allTestersEmails}
               userId={userid}
@@ -107,6 +143,7 @@ export default async function UserPage({
                 />
               </>
             )}
+
             <AppForTestList
               userId={userid}
               appId={userWithHisApp.userApp.id}

@@ -99,7 +99,7 @@ export async function getAppsForTesting({
   appId,
 }: {
   userId: string;
-  appId: string | undefined;
+  appId: string;
 }) {
   const res = await prisma.app.findMany({
     where: {
@@ -113,17 +113,20 @@ export async function getAppsForTesting({
   });
   const res2 = await Promise.all(
     res.map(async (app) => {
-      const authorAsUsersAppTester = await prisma.testingAppsUsers.findMany({
+      const authorAsUsersAppTester = await prisma.testingAppsUsers.findUnique({
         where: {
-          userId: app.author.id,
-          appId: appId,
+          appId_userId: {
+            userId: app.author.id,
+            appId: appId,
+          },
         },
       });
-      return { ...app, authorAsUsersAppTester: authorAsUsersAppTester[0] };
+
+      return { ...app, authorAsUsersAppTester: authorAsUsersAppTester };
     }),
   );
-  // console.log('res2!!!');
-  // console.dir(res2, { depth: Infinity });
+  console.log('🚀 ~ res2:', res2);
+
   return res2;
 }
 
