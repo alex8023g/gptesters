@@ -107,7 +107,8 @@ export async function getAppsForTesting({
     },
     include: {
       author: true,
-      testingAppsUsers: true,
+      // testingAppsUsers: true,
+      testingAppsUsers: { where: { userId } },
     },
     orderBy: { createdAt: 'asc' },
   });
@@ -125,9 +126,14 @@ export async function getAppsForTesting({
       return { ...app, authorAsUsersAppTester: authorAsUsersAppTester };
     }),
   );
-  console.log('🚀 ~ res2:', res2);
+  console.dir(res2, { depth: Infinity });
 
-  return res2;
+  // return res2;
+  return res2.filter(
+    (app) =>
+      (!app.hasEnoughInstallations && !app.hasTwelveInstallations) ||
+      app.testingAppsUsers[0].isInstalled,
+  );
 }
 
 export async function getAppById(id: string) {
