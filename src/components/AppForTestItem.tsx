@@ -95,9 +95,13 @@ export function AppForTestItem({ app, userId }: Props) {
           please install app on phone
         </TableCell>
       ) : isUserTester && isUserTester.isInstalled ? (
-        <TableCell className='text-red-600'>
-          please don&apos;t remove app
-        </TableCell>
+        app.testCompleted ? (
+          <TableCell>please, remove app (test completed)</TableCell>
+        ) : (
+          <TableCell className='text-red-600'>
+            please don&apos;t remove app
+          </TableCell>
+        )
       ) : (
         <TableCell></TableCell>
       )}

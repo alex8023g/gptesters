@@ -31,6 +31,7 @@ model App {
   testingAppsUsers       TestingAppsUsers[]
   hasEnoughInstallations Boolean            @default(false)
   hasTwelveInstallations Boolean            @default(false)
+  testCompleted          Boolean            @default(false)
 }
 
 model TestingAppsUsers {

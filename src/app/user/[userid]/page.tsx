@@ -9,6 +9,7 @@ import { AddAsTestersBtn } from '@/components/AddAsTestersBtn';
 import { TestingAppsUsers } from '@prisma/client';
 import Image from 'next/image';
 import { HasEnoughInstallationsSwitch } from '@/components/HasEnoughInstallationsSwitch';
+import { TestCompletedSwitch } from '@/components/TestCompletedSwitch';
 
 export async function generateMetadata({
   params: { userid },
@@ -35,6 +36,13 @@ export default async function UserPage({
   if (!userWithHisApp.userApp) {
     return (
       <>
+        <h2>Select All countries, it`s important!</h2>
+        <Image
+          src={'/img/countries.png'}
+          width={1000}
+          height={1000}
+          alt='screenshot'
+        />
         <h2>add link to app from google play console</h2>
         <p>
           example: https://play.google.com/store/apps/details?id=todo.cap.v1.com
@@ -93,67 +101,73 @@ export default async function UserPage({
       {/* <h1 className=''>UserPage</h1> */}
       <div>
         <span>your email: </span>
-        <span className='font-bold'>{userWithHisApp?.email}</span>
+        <span className='font-bold'>{userWithHisApp.email}</span>
+        <span>userId: </span>
+        <span className='font-bold'>{userWithHisApp.id}</span>
       </div>
       <div>
-        {userWithHisApp.userApp ? (
-          <>
-            <div className='flex'>
-              <div className='mr-1'>
-                your app:{' '}
-                <Link
-                  href={userWithHisApp.userApp.url}
-                  className='font-bold underline'
-                >
-                  {userWithHisApp.userApp.name}
-                </Link>
-                <span> appId: {userWithHisApp.userApp.id}</span>
-              </div>
-              <div className=''>
-                installed:
-                <span className='px-1 font-bold'>{installsAmount}</span>
-                times
-              </div>
+        {/* {userWithHisApp.userApp ? ( */}
+        <>
+          <div className='flex'>
+            <div className='mr-1'>
+              your app:{' '}
+              <Link
+                href={userWithHisApp.userApp.url}
+                className='font-bold underline'
+              >
+                {userWithHisApp.userApp.name}
+              </Link>
+              <span> appId: {userWithHisApp.userApp.id}</span>
             </div>
-            {/* <div className='flex space-x-2 py-2'>
+            <div className=''>
+              installed:
+              <span className='px-1 font-bold'>{installsAmount}</span>
+              times
+            </div>
+          </div>
+          {/* <div className='flex space-x-2 py-2'>
               <span className=''>I need more testers</span>
               <Switch className='my-auto' />
               <span>I have enough testers</span>
             </div> */}
-            <HasEnoughInstallationsSwitch
-              app={userWithHisApp.userApp}
-              userId={userid}
-            />
-            <p>export testers list to csv and add to google play console</p>
+          <HasEnoughInstallationsSwitch
+            app={userWithHisApp.userApp}
+            userId={userid}
+          />
+          <p>export testers list to csv and add to google play console</p>
 
-            <ExportTesterListToCsvBtn
-              allTestersEmails={allTestersEmails}
-              userId={userid}
-              appId={userWithHisApp.userApp.id}
-            />
-            {isNotAddedTesters && (
-              <>
-                <p>
-                  after testers list will be added to google play console push
-                  the button
-                </p>
-                <AddAsTestersBtn
-                  appId={userWithHisApp.userApp.id}
-                  userId={userid}
-                />
-              </>
-            )}
+          <ExportTesterListToCsvBtn
+            allTestersEmails={allTestersEmails}
+            userId={userid}
+            appId={userWithHisApp.userApp.id}
+          />
+          {isNotAddedTesters && (
+            <>
+              <p>
+                after testers list will be added to google play console push the
+                button
+              </p>
+              <AddAsTestersBtn
+                appId={userWithHisApp.userApp.id}
+                userId={userid}
+              />
+            </>
+          )}
 
-            <AppForTestList
-              userId={userid}
-              appId={userWithHisApp.userApp.id}
-              userAppTesters={userAppTesters}
-              notUserAppList={notUserAppList}
-              // userWithHisApp={userWithHisApp}
-              appsForTesting={appsForTesting}
-            />
-          </>
-        ) : (
+          {!isNotAddedTesters && (
+            <TestCompletedSwitch app={userWithHisApp.userApp} userId={userid} />
+          )}
+
+          <AppForTestList
+            userId={userid}
+            appId={userWithHisApp.userApp.id}
+            userAppTesters={userAppTesters}
+            notUserAppList={notUserAppList}
+            // userWithHisApp={userWithHisApp}
+            appsForTesting={appsForTesting}
+          />
+        </>
+        {/* ) : (
           <>
             <h2>add link to app from google play console</h2>
             <p>
@@ -168,7 +182,7 @@ export default async function UserPage({
               alt='screenshot'
             />
           </>
-        )}
+        )} */}
       </div>
     </main>
   );

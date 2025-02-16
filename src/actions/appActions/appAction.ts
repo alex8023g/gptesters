@@ -14,6 +14,7 @@ import {
   isNotAddedTesters,
   addAsTester,
   markAppHasEnoughInstalls,
+  markAppTestCompleted,
 } from './appActions';
 
 export const appAction = {
@@ -32,4 +33,5 @@ export const appAction = {
   isNotAddedTesters,
   addAsTester,
   markAppHasEnoughInstalls,
+  markAppTestCompleted,
 } as const;

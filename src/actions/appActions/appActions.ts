@@ -126,13 +126,13 @@ export async function getAppsForTesting({
       return { ...app, authorAsUsersAppTester: authorAsUsersAppTester };
     }),
   );
-  console.dir(res2, { depth: Infinity });
+  // console.dir(res2, { depth: Infinity });
 
   // return res2;
   return res2.filter(
     (app) =>
       (!app.hasEnoughInstallations && !app.hasTwelveInstallations) ||
-      app.testingAppsUsers[0].isInstalled,
+      app.testingAppsUsers[0]?.isInstalled,
   );
 }
 
@@ -276,5 +276,23 @@ export async function markAppHasEnoughInstalls({
       hasEnoughInstallations,
     },
   });
+  revalidatePath(`/user/${userId}`);
+}
+export async function markAppTestCompleted({
+  appId,
+  userId,
+  testCompleted,
+}: {
+  appId: string;
+  userId: string;
+  testCompleted: boolean;
+}) {
+  const res = await prisma.app.update({
+    where: { id: appId },
+    data: {
+      testCompleted,
+    },
+  });
+  console.log('🚀 ~ res:', res);
   revalidatePath(`/user/${userId}`);
 }
