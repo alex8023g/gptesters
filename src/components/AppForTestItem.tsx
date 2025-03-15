@@ -16,10 +16,8 @@ type Props = {
 };
 
 export function AppForTestItem({ app, userId }: Props) {
-  // console.log('app:', app);
-  const isUserTester = app.testingAppsUsers?.find(
-    (item) => item.userId === userId,
-  );
+  // console.log('app:', app, userId);
+  const testingAppsUser = app.testingAppsUsers[0];
 
   return (
     <TableRow key={app.id} className=''>
@@ -51,7 +49,8 @@ export function AppForTestItem({ app, userId }: Props) {
       </TableCell> */}
       <TableCell className=''>{app.name}</TableCell>
       <TableCell>
-        {Boolean(isUserTester) ? (
+        {/* {Boolean(isUserTester) ? ( */}
+        {Boolean(testingAppsUser?.addedAsTester) ? (
           <Link href={app.url} className='underline'>
             {app.url}
           </Link>
@@ -84,17 +83,19 @@ export function AppForTestItem({ app, userId }: Props) {
             become a tester
           </Button>
         )} */}
-        {Boolean(isUserTester) ? (
+        {Boolean(testingAppsUser?.addedAsTester) ? (
           <span>you added as a tester</span>
         ) : (
-          <span className='text-gray-400'>you Not added as a tester yet</span>
+          <span className='text-gray-400'>
+            you are Not added as a tester yet
+          </span>
         )}
       </TableCell>
-      {isUserTester && !isUserTester.isInstalled ? (
+      {testingAppsUser?.addedAsTester && !testingAppsUser.isInstalled ? (
         <TableCell className='text-orange-600'>
           please install app on phone
         </TableCell>
-      ) : isUserTester && isUserTester.isInstalled ? (
+      ) : testingAppsUser?.addedAsTester && testingAppsUser.isInstalled ? (
         app.testCompleted ? (
           <TableCell>please, remove app (test completed)</TableCell>
         ) : (
@@ -107,10 +108,8 @@ export function AppForTestItem({ app, userId }: Props) {
       )}
       <TableCell>
         <Switch
-          disabled={
-            !app.testingAppsUsers.find((item) => item.userId === userId)
-          }
-          checked={isUserTester?.isInstalled}
+          disabled={!testingAppsUser?.addedAsTester}
+          checked={testingAppsUser?.isInstalled}
           onCheckedChange={async (e) => {
             // console.log('e:', e);
             await appAction.appInstalledByUser({

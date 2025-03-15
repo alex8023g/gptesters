@@ -53,7 +53,7 @@ export async function appInstalledByUser({
     .then((appInstalled) => appInstalled.filter((app) => app.isInstalled));
 
   // console.log('🚀 ~ amountAppInstalled:', amountAppInstalled.length);
-  if (amountAppInstalled.length >= 12) {
+  if (amountAppInstalled.length >= 13) {
     await prisma.app.update({
       where: { id: appId },
       data: { hasTwelveInstallations: true },
