@@ -10,6 +10,8 @@ import { TestingAppsUsers } from '@prisma/client';
 import Image from 'next/image';
 import { HasEnoughInstallationsSwitch } from '@/components/HasEnoughInstallationsSwitch';
 import { TestCompletedSwitch } from '@/components/TestCompletedSwitch';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 
 export async function generateMetadata({
   params: { userid },
@@ -25,11 +27,19 @@ export async function generateMetadata({
 export const revalidate = 1;
 export const dynamic = 'force-dynamic';
 
-export default async function UserPage({
-  params: { userid },
-}: {
+type Props = {
   params: { userid: string };
-}) {
+};
+
+export default async function UserPage({ params: { userid } }: Props) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect(`/`);
+  } else if (session.user.id !== userid) {
+    redirect(`/user/${session.user.id}`);
+  }
+
   const userWithHisApp = await userAction.getUserByIdWithApp(userid);
   if (!userWithHisApp) redirect('/');
 

@@ -1,7 +1,14 @@
 import { SignInBtn } from '@/components/SignInBtn';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from './api/auth/[...nextauth]/authOptions';
+import { redirect } from 'next/navigation';
 
 export default async function HomePage() {
-  // console.log('users:', users);
+  const session = await getServerSession(authOptions);
+  if (session?.user.id) {
+    redirect(`/user/${session.user.id}`);
+  }
+
   return (
     <main className='flex h-full flex-col'>
       <div className='m-auto'>
