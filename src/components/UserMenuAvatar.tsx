@@ -1,6 +1,5 @@
 'use client';
-import { signIn, signOut } from 'next-auth/react';
-import { Button } from './ui/button';
+import { signOut } from 'next-auth/react';
 import { Session } from 'next-auth';
 import { UserCircleIconCustom } from './Icons/UserCircleIconCustom';
 import {
@@ -12,13 +11,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { LogOut } from 'lucide-react';
-import { usePathname } from 'next/navigation';
 
 type Props = {
   session: Session | null;
 };
 export function UserMenuAvatar({ session }: Props) {
-  const pathname = usePathname();
+  // const pathname = usePathname();
   if (session) {
     return (
       <DropdownMenu>
@@ -40,16 +38,14 @@ export function UserMenuAvatar({ session }: Props) {
         </DropdownMenuContent>
       </DropdownMenu>
     );
-  } else if (pathname !== '/login') {
+  } /* else if (pathname !== '/login') {
     return (
       <>
         <Button className='ml-auto' onClick={() => signIn('google')}>
           Sign in
         </Button>
-        {/* <Button asChild className='ml-auto'>
-          <Link href='/login'>Sign in</Link>
-        </Button> */}
+
       </>
     );
-  }
+  } */
 }

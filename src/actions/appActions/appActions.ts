@@ -53,7 +53,7 @@ export async function appInstalledByUser({
     .then((appInstalled) => appInstalled.filter((app) => app.isInstalled));
 
   // console.log('🚀 ~ amountAppInstalled:', amountAppInstalled.length);
-  if (amountAppInstalled.length >= 13) {
+  if (amountAppInstalled.length >= 12) {
     await prisma.app.update({
       where: { id: appId },
       data: { hasTwelveInstallations: true },
@@ -132,7 +132,8 @@ export async function getAppsForTesting({
   return res2.filter(
     (app) =>
       (!app.hasEnoughInstallations && !app.hasTwelveInstallations) ||
-      app.testingAppsUsers[0]?.isInstalled,
+      app.testingAppsUsers[0]?.isInstalled ||
+      app.authorAsUsersAppTester?.isInstalled,
   );
 }
 
@@ -192,20 +193,6 @@ export async function addAsTester({
   revalidatePath(`/user/${userId}`, 'page');
 }
 
-export async function getAllTesterEmails({
-  userId,
-  // appId,
-}: {
-  userId: string;
-  // appId: string;
-}) {
-  const allTesters = await prisma.user.findMany({
-    where: { id: { not: userId } },
-  });
-
-  return allTesters.map((item) => item.email);
-}
-
 export async function addUsersAsTesters({
   userId,
   appId,
@@ -225,6 +212,20 @@ export async function addUsersAsTesters({
     skipDuplicates: true,
   });
   revalidatePath(`/user/${userId}`, 'page');
+}
+
+export async function getAllTesterEmails({
+  userId,
+  // appId,
+}: {
+  userId: string;
+  // appId: string;
+}) {
+  const allTesters = await prisma.user.findMany({
+    where: { id: { not: userId } },
+  });
+
+  return allTesters.map((item) => item.email);
 }
 
 export async function revalidatePathUser(userId: string) {

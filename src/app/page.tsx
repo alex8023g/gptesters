@@ -2,6 +2,7 @@ import { SignInBtn } from '@/components/SignInBtn';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from './api/auth/[...nextauth]/authOptions';
 import { redirect } from 'next/navigation';
+import { LoginForm } from '@/components/LoginForm';
 
 export default async function HomePage() {
   const session = await getServerSession(authOptions);
@@ -12,8 +13,8 @@ export default async function HomePage() {
   return (
     <main className='flex h-full flex-col'>
       <div className='m-auto'>
-        {/* <LoginForm />
-        <UsersList users={users} /> */}
+        <LoginForm />
+        {/* <UsersList users={users} /> */}
         <p>Welcome to gp testers!</p>
         <p>
           Here developers helps each other to pass test phase before deploy app

@@ -46,32 +46,33 @@ export function AppForTestList({
   }, [userAppTesters, notUserAppList, appId, userId]);
   return (
     <>
-      <h1 className=''>AppsForTestList:</h1>
-
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>user</TableHead>
-            <TableHead>comment</TableHead>
-            {/* <TableHead>add as a tester to gpc</TableHead> */}
-            <TableHead>app name</TableHead>
-            <TableHead>app url</TableHead>
-            <TableHead>become a tester</TableHead>
-            <TableHead>comment</TableHead>
-            <TableHead>app installed</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {appsForTesting.map((app) => (
-            <AppForTestItem
-              key={app.id}
-              app={app}
-              userId={userId}
-              // userWithHisApp={userWithHisApp}
-            />
-          ))}
-        </TableBody>
-      </Table>
+      {/* <h1 className=''>AppsForTestList:</h1> */}
+      <div className='overflow-hidden rounded-lg border shadow-md'>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>user</TableHead>
+              <TableHead>comment</TableHead>
+              {/* <TableHead>add as a tester to gpc</TableHead> */}
+              {/* <TableHead>app name</TableHead> */}
+              <TableHead>app url</TableHead>
+              {/* <TableHead>become a tester</TableHead> */}
+              <TableHead>comment</TableHead>
+              <TableHead>app installed</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {appsForTesting.map((app) => (
+              <AppForTestItem
+                key={app.id}
+                app={app}
+                userId={userId}
+                // userWithHisApp={userWithHisApp}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </>
   );
 }
