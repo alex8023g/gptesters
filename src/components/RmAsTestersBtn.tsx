@@ -4,7 +4,7 @@ import { appAction } from '@/actions/appActions/appAction';
 import { Button } from './ui/button';
 
 // export function TestersListWasAddedBtn({
-export function AddAsTestersBtn({
+export function RmAsTestersBtn({
   appId,
   userId,
 }: {
@@ -14,10 +14,10 @@ export function AddAsTestersBtn({
   return (
     <Button
       onClick={() => {
-        appAction.addAsTesters({ appId, userId });
+        appAction.rmAsTesters({ appId, userId });
       }}
     >
-      testers list was added to gp console
+      testers list was NOT added to gp console
     </Button>
   );
 }

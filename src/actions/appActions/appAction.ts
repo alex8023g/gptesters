@@ -12,9 +12,10 @@ import {
   getAllTesterEmails,
   addUsersAsTesters,
   isNotAddedTesters,
-  addAsTester,
+  addAsTesters,
   markAppHasEnoughInstalls,
   markAppTestCompleted,
+  rmAsTesters,
 } from './appActions';
 
 export const appAction = {
@@ -31,7 +32,8 @@ export const appAction = {
   getAllTesterEmails,
   addUsersAsTesters,
   isNotAddedTesters,
-  addAsTester,
+  addAsTesters,
   markAppHasEnoughInstalls,
   markAppTestCompleted,
+  rmAsTesters,
 } as const;

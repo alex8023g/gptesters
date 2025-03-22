@@ -177,7 +177,7 @@ export async function isNotAddedTesters(appId: string) {
   return userAppTesters.some((item) => !item.addedAsTester);
 }
 
-export async function addAsTester({
+export async function addAsTesters({
   appId,
   userId,
 }: {
@@ -192,16 +192,33 @@ export async function addAsTester({
   });
   revalidatePath(`/user/${userId}`, 'page');
 }
+export async function rmAsTesters({
+  appId,
+  userId,
+}: {
+  appId: string;
+  userId: string;
+}) {
+  await prisma.testingAppsUsers.deleteMany({
+    where: {
+      appId,
+      addedAsTester: false,
+    },
+  });
+  revalidatePath(`/user/${userId}`, 'page');
+}
 
 export async function addUsersAsTesters({
   userId,
   appId,
+  allTestersEmails,
 }: {
   userId: string;
   appId: string;
+  allTestersEmails: string[];
 }) {
   const allTesters = await prisma.user.findMany({
-    where: { id: { not: userId } },
+    where: { email: { in: allTestersEmails } },
   });
 
   await prisma.testingAppsUsers.createMany({

@@ -11,6 +11,7 @@ import { TestCompletedSwitch } from '@/components/TestCompletedSwitch';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 import { HaveEnoughTestersCheckbox } from '@/components/HaveEnoughTestersCheckbox';
+import { RmAsTestersBtn } from '@/components/RmAsTestersBtn';
 
 export async function generateMetadata({
   params: { userid },
@@ -157,15 +158,9 @@ export default async function UserPage({ params: { userid } }: Props) {
             userId={userid}
           />
         )}
-        <p>export testers list to csv and add to google play console</p>
 
-        <ExportTesterListToCsvBtn
-          allTestersEmails={allTestersEmails}
-          userId={userid}
-          appId={userWithHisApp.userApp.id}
-        />
-        {isNotAddedTesters && (
-          <>
+        {isNotAddedTesters ? (
+          <div>
             <p>
               after testers list will be added to google play console push the
               button
@@ -174,7 +169,19 @@ export default async function UserPage({ params: { userid } }: Props) {
               appId={userWithHisApp.userApp.id}
               userId={userid}
             />
-          </>
+            <span className='mx-2'>OR</span>
+            <RmAsTestersBtn appId={userWithHisApp.userApp.id} userId={userid} />
+          </div>
+        ) : (
+          <div>
+            <p>export testers list to csv and add to google play console</p>
+
+            <ExportTesterListToCsvBtn
+              allTestersEmails={allTestersEmails}
+              userId={userid}
+              appId={userWithHisApp.userApp.id}
+            />
+          </div>
         )}
 
         {!isNotAddedTesters && (

@@ -20,6 +20,7 @@ export function ExportTesterListToCsvBtn({
           appAction.addUsersAsTesters({
             userId,
             appId,
+            allTestersEmails,
           });
           // console.log('save file');
           const data = allTestersEmails.join('\n');
