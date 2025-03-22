@@ -51,7 +51,7 @@ export function AppForTestItem({ app, userId }: Props) {
         {/* {Boolean(isUserTester) ? ( */}
         {Boolean(testingAppsUser?.addedAsTester) ? (
           <a href={app.url} target='_blank' className='underline'>
-            {/* {app.url} */}app in Google Play
+            {/* {app.url} */}app in Google&nbsp;Play
           </a>
         ) : (
           <span className='text-gray-400'>

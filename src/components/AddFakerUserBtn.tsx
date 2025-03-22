@@ -1,11 +1,9 @@
 'use client';
 import { userAction } from '@/actions/userActions/userAction';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useState } from 'react';
 
-export function LoginForm() {
-  const [email, setEmail] = useState('');
+export function AddFakerUserBtn() {
+  // const [email, setEmail] = useState('');
   return (
     <>
       <Button
@@ -14,9 +12,9 @@ export function LoginForm() {
           userAction.addUser();
         }}
       >
-        sign up with google
+        sign up as Faker User
       </Button>
-      <div className='flex w-full max-w-sm items-center space-x-2'>
+      {/* <div className='flex w-full max-w-sm items-center space-x-2'>
         <Input
           type='email'
           placeholder='login with email'
@@ -25,14 +23,13 @@ export function LoginForm() {
           }}
         />
         <Button
-          // type='submit'
           onClick={async () => {
             await userAction.login(email);
           }}
         >
           login
         </Button>
-      </div>
+      </div> */}
     </>
   );
 }

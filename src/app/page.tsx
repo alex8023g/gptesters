@@ -2,7 +2,6 @@ import { SignInBtn } from '@/components/SignInBtn';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from './api/auth/[...nextauth]/authOptions';
 import { redirect } from 'next/navigation';
-import { LoginForm } from '@/components/LoginForm';
 
 export default async function HomePage() {
   const session = await getServerSession(authOptions);
@@ -12,21 +11,23 @@ export default async function HomePage() {
 
   return (
     <main className='flex h-full flex-col'>
-      <div className='m-auto'>
-        <LoginForm />
-        {/* <UsersList users={users} /> */}
-        <p>Welcome to gp testers!</p>
+      <div className='m-auto space-y-2 p-4'>
+        <p>Welcome to GP Testers!</p>
         <p>
           Here developers helps each other to pass test phase before deploy app
           to Google Play store.
         </p>
         <p>
           You become a tester for other developers&apos; apps, and other
-          developers become testers for your app.
+          developers becomes testers for your app.
         </p>
         <p>
-          Please sign up with the Google account that you will use for testing
-          other developers applications (it&apos;s important)
+          Please{' '}
+          <span className='font-bold'>
+            sign up with the Google account that you will use for testing other
+            developers applications{' '}
+          </span>
+          (it&apos;s important)
         </p>
         <SignInBtn />
       </div>
