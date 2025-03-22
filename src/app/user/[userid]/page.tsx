@@ -7,11 +7,11 @@ import { ExportTesterListToCsvBtn } from '@/components/ExportTesterListToCsvBtn'
 import { AddAsTestersBtn } from '@/components/AddAsTestersBtn';
 import { TestingAppsUsers } from '@prisma/client';
 import Image from 'next/image';
-import { TestCompletedSwitch } from '@/components/TestCompletedSwitch';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 import { HaveEnoughTestersCheckbox } from '@/components/HaveEnoughTestersCheckbox';
 import { RmAsTestersBtn } from '@/components/RmAsTestersBtn';
+import { TestCompletedCheckbox } from '@/components/TestCompletedCheckbox';
 
 export async function generateMetadata({
   params: { userid },
@@ -146,47 +146,46 @@ export default async function UserPage({ params: { userid } }: Props) {
           app={userWithHisApp.userApp}
           userId={userid}
         /> */}
-
-        <div className='mb-2'>
-          your app installed:
-          <span className='px-1 font-bold'>{installsAmount}</span>
-          times
+        <div className='mb-2 flex flex-col sm:flex-row sm:space-x-5'>
+          <div className='mb-2'>
+            your app installed:
+            <span className='px-1 font-bold'>{installsAmount}</span>
+            times
+          </div>
+          {!userWithHisApp.userApp.hasTwelveInstallations && (
+            <HaveEnoughTestersCheckbox
+              app={userWithHisApp.userApp}
+              userId={userid}
+            />
+          )}
+          <TestCompletedCheckbox app={userWithHisApp.userApp} userId={userid} />
         </div>
-        {!userWithHisApp.userApp.hasTwelveInstallations && (
-          <HaveEnoughTestersCheckbox
-            app={userWithHisApp.userApp}
-            userId={userid}
-          />
-        )}
-
         {isNotAddedTesters ? (
-          <div>
-            <p>
+          <div className='flex flex-col sm:block sm:space-x-2'>
+            {/* <p>
               after testers list will be added to google play console push the
               button
-            </p>
+            </p> */}
             <AddAsTestersBtn
               appId={userWithHisApp.userApp.id}
               userId={userid}
             />
-            <span className='mx-2'>OR</span>
+            <span className='mx-auto sm:mx-0'>OR</span>
             <RmAsTestersBtn appId={userWithHisApp.userApp.id} userId={userid} />
           </div>
         ) : (
-          <div>
-            <p>export testers list to csv and add to google play console</p>
-
+          <div className='flex flex-col space-x-2 sm:block'>
             <ExportTesterListToCsvBtn
               allTestersEmails={allTestersEmails}
               userId={userid}
               appId={userWithHisApp.userApp.id}
             />
+            <span>and add to google play console</span>
           </div>
         )}
-
-        {!isNotAddedTesters && (
+        {/* {!isNotAddedTesters && (
           <TestCompletedSwitch app={userWithHisApp.userApp} userId={userid} />
-        )}
+        )} */}
       </div>
       <AppForTestList
         userId={userid}
