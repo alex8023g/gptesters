@@ -15,6 +15,8 @@ export function ExportTesterListToCsvBtn({
 }: Props) {
   return (
     <Button
+      className='text-md px-0 underline'
+      variant={'link'}
       onClick={() => {
         appAction.addUsersAsTesters({
           userId,

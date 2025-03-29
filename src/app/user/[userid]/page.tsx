@@ -12,6 +12,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 import { HaveEnoughTestersCheckbox } from '@/components/HaveEnoughTestersCheckbox';
 import { RmAsTestersBtn } from '@/components/RmAsTestersBtn';
 import { TestCompletedCheckbox } from '@/components/TestCompletedCheckbox';
+import { TestCompletedDialog } from '@/components/TestCompletedDialog';
 
 export async function generateMetadata({
   params: { userid },
@@ -44,7 +45,7 @@ export default async function UserPage({ params: { userid } }: Props) {
   const userWithHisApp = await userAction.getUserByIdWithApp(userid);
   if (!userWithHisApp) redirect('/');
 
-  if (!userWithHisApp.userApp) {
+  if (!userWithHisApp.userApp[0]) {
     return (
       <main className='p-3'>
         <p className='mb-3 font-semibold'>
@@ -72,7 +73,7 @@ export default async function UserPage({ params: { userid } }: Props) {
 
   const appsForTesting = await appAction.getAppsForTesting({
     userId: userid,
-    appId: userWithHisApp.userApp.id,
+    appId: userWithHisApp.userApp[0].id,
   });
   // const appsForTesting = userWithHisApp.userApp
   //   ? await appAction.getAppsForTesting({
@@ -82,7 +83,7 @@ export default async function UserPage({ params: { userid } }: Props) {
   //   : [];
 
   const userAppTesters = await appAction.getUserAppTesters(
-    userWithHisApp.userApp.id,
+    userWithHisApp.userApp[0].id,
   );
 
   const installsAmount = userAppTesters.reduce(
@@ -115,7 +116,7 @@ export default async function UserPage({ params: { userid } }: Props) {
   });
 
   const isNotAddedTesters = await appAction.isNotAddedTesters(
-    userWithHisApp.userApp.id,
+    userWithHisApp.userApp[0].id,
   );
 
   // const isNotAddedTesters = userWithHisApp.userApp
@@ -146,19 +147,33 @@ export default async function UserPage({ params: { userid } }: Props) {
           app={userWithHisApp.userApp}
           userId={userid}
         /> */}
-        <div className='mb-2 flex flex-col sm:flex-row sm:space-x-5'>
-          <div className='mb-2'>
-            your app installed:
+        <div className='mb-2 flex flex-col sm:mb-0 sm:flex-row sm:space-x-5'>
+          <div className='flex items-center space-x-2'>
+            <a
+              href={userWithHisApp.userApp[0].url}
+              target='_blank'
+              className='mr-2 inline-block underline'
+            >
+              your app
+            </a>
+            installed:
             <span className='px-1 font-bold'>{installsAmount}</span>
             times
           </div>
-          {!userWithHisApp.userApp.hasTwelveInstallations && (
+          {!userWithHisApp.userApp[0].hasTwelveInstallations && (
             <HaveEnoughTestersCheckbox
-              app={userWithHisApp.userApp}
+              app={userWithHisApp.userApp[0]}
               userId={userid}
             />
           )}
-          <TestCompletedCheckbox app={userWithHisApp.userApp} userId={userid} />
+          <TestCompletedCheckbox
+            app={userWithHisApp.userApp[0]}
+            userId={userid}
+          />
+          <TestCompletedDialog
+            app={userWithHisApp.userApp[0]}
+            userId={userid}
+          />
         </div>
         {isNotAddedTesters ? (
           <div className='flex flex-col sm:block sm:space-x-2'>
@@ -167,21 +182,27 @@ export default async function UserPage({ params: { userid } }: Props) {
               button
             </p> */}
             <AddAsTestersBtn
-              appId={userWithHisApp.userApp.id}
+              appId={userWithHisApp.userApp[0].id}
               userId={userid}
             />
             <span className='mx-auto sm:mx-0'>OR</span>
-            <RmAsTestersBtn appId={userWithHisApp.userApp.id} userId={userid} />
+            <RmAsTestersBtn
+              appId={userWithHisApp.userApp[0].id}
+              userId={userid}
+            />
           </div>
-        ) : (
+        ) : !userWithHisApp.userApp[0].hasEnoughInstallations &&
+          !userWithHisApp.userApp[0].hasTwelveInstallations ? (
           <div className='flex flex-col space-x-2 sm:block'>
             <ExportTesterListToCsvBtn
               allTestersEmails={allTestersEmails}
               userId={userid}
-              appId={userWithHisApp.userApp.id}
+              appId={userWithHisApp.userApp[0].id}
             />
             <span>and add to google play console</span>
           </div>
+        ) : (
+          <></>
         )}
         {/* {!isNotAddedTesters && (
           <TestCompletedSwitch app={userWithHisApp.userApp} userId={userid} />
@@ -189,7 +210,7 @@ export default async function UserPage({ params: { userid } }: Props) {
       </div>
       <AppForTestList
         userId={userid}
-        appId={userWithHisApp.userApp.id}
+        appId={userWithHisApp.userApp[0].id}
         userAppTesters={userAppTesters}
         notUserAppList={notUserAppList}
         // userWithHisApp={userWithHisApp}

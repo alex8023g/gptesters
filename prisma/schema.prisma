@@ -13,7 +13,7 @@ model User {
   email            String             @unique
   emailVerified    DateTime?
   image            String?
-  userApp          App?
+  userApp          App[]
   testingAppsUsers TestingAppsUsers[]
   accounts         Account[]
   sessions         Session[]
@@ -25,7 +25,7 @@ model App {
   url                    String
   createdAt              DateTime           @default(now())
   author                 User               @relation(fields: [userId], references: [id])
-  userId                 String             @unique
+  userId                 String //@unique
   testingAppsUsers       TestingAppsUsers[]
   hasEnoughInstallations Boolean            @default(false)
   hasTwelveInstallations Boolean            @default(false)

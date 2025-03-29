@@ -2,6 +2,7 @@
 import { prisma } from '@/lib/prisma';
 import { App, TestingAppsUsers } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
+import fetch from 'node-fetch';
 
 type AddAppActionArg = {
   userId: string;
@@ -12,6 +13,11 @@ type AddAppActionArg = {
 };
 
 export async function addAppAction({ userId, app }: AddAppActionArg) {
+  const res = await fetch(app.url);
+  console.log('🚀 ~ onClick={ ~ res:', app.url, res.status);
+  if (res.status !== 200) {
+    return { ok: false, message: 'no such app' };
+  }
   await prisma.app.create({
     data: {
       name: app.name,
@@ -21,6 +27,7 @@ export async function addAppAction({ userId, app }: AddAppActionArg) {
   });
 
   revalidatePath(`/user/${userId}`);
+  return { ok: true };
 }
 
 type AppInstalledByUserArg = {
@@ -131,7 +138,9 @@ export async function getAppsForTesting({
   // return res2;
   return res2.filter(
     (app) =>
-      (!app.hasEnoughInstallations && !app.hasTwelveInstallations) ||
+      (!app.hasEnoughInstallations &&
+        !app.hasTwelveInstallations &&
+        !app.testCompleted) ||
       app.testingAppsUsers[0]?.isInstalled ||
       app.authorAsUsersAppTester?.isInstalled,
   );

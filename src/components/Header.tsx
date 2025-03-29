@@ -16,7 +16,7 @@ export function Header({ session }: Props) {
   return (
     <header
       className={twJoin(
-        'sticky left-0 top-0 z-10 border-b bg-opacity-20 bg-clip-padding py-2 backdrop-blur-lg backdrop-filter',
+        'sticky left-0 top-0 z-10 border-b bg-opacity-20 bg-clip-padding py-2 shadow-sm backdrop-blur-lg backdrop-filter',
         pathname === '/login' ? 'hidden' : '',
       )}
     >

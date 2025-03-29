@@ -2,12 +2,12 @@ import {
   addUser,
   getUserById,
   getUserByIdWithApp,
-  login,
+  // login,
   getAllUserList,
 } from './userActions';
 
 export const userAction = {
-  login,
+  // login,
   addUser,
   getUserById,
   getUserByIdWithApp,

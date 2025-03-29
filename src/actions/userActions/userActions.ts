@@ -39,6 +39,6 @@ export async function getAllUserList() {
 export async function getUserByIdWithApp(id: string) {
   return prisma.user.findUnique({
     where: { id },
-    include: { userApp: true },
+    include: { userApp: { where: { testCompleted: false }, take: 1 } },
   });
 }

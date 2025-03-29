@@ -52,12 +52,12 @@ export function AppForTestList({
           <TableHeader>
             <TableRow>
               <TableHead>user</TableHead>
-              <TableHead>comment</TableHead>
+              <TableHead>user as a tester</TableHead>
               {/* <TableHead>add as a tester to gpc</TableHead> */}
               {/* <TableHead>app name</TableHead> */}
-              <TableHead>app url</TableHead>
+              <TableHead>users app url</TableHead>
               {/* <TableHead>become a tester</TableHead> */}
-              <TableHead>comment</TableHead>
+              <TableHead>you as a tester</TableHead>
               <TableHead>app installed</TableHead>
             </TableRow>
           </TableHeader>

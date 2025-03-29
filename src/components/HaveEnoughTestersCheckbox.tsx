@@ -14,7 +14,7 @@ type Props = {
 
 export function HaveEnoughTestersCheckbox({ app, userId }: Props) {
   return (
-    <div className='mb-2 flex items-center space-x-2'>
+    <div className='flex items-center space-x-2'>
       <Checkbox
         id='enoughTestersChbx'
         checked={app.hasEnoughInstallations}

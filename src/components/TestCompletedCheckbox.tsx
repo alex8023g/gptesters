@@ -12,7 +12,7 @@ type Props = {
 
 export function TestCompletedCheckbox({ app, userId }: Props) {
   return (
-    <div className='flex space-x-2 py-1'>
+    <div className='flex items-center space-x-2'>
       <Checkbox
         id='testCompletedChbx'
         className=''
