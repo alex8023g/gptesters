@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { NextAuthOptions } from 'next-auth';
+import { Adapter } from 'next-auth/adapters';
 import GoogleProvider from 'next-auth/providers/google';
 
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET)
@@ -9,7 +10,7 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET)
   );
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -70,13 +71,14 @@ export const authOptions: NextAuthOptions = {
         // return '/unauthorized'
       }
     },
-    async session({ session, token, user }) {
-      console.log('🚀 ~ session ~ user:', user);
-      console.log('🚀 ~ session ~ token:', token);
-      console.log('🚀 ~ session ~ session:', session);
+    async session({ session, /* token, */ user }) {
+      // console.log('🚀 ~ session ~ user:', user);
+      // console.log('🚀 ~ session ~ token:', token);
+      // console.log('🚀 ~ session ~ session:', session);
       // Send properties to the client, like an access_token and user id from a provider.
       // session.accessToken = token.accessToken;
       session.user.id = user.id;
+      session.user.role = user.role;
 
       return session;
     },

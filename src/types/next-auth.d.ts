@@ -1,5 +1,6 @@
 // eslint-disable-next-line
-import NextAuth from 'next-auth';
+import NextAuth, { type DefaultSession, type DefaultUser } from 'next-auth';
+import { Role } from '@prisma/client';
 
 declare module 'next-auth' {
   /**
@@ -7,9 +8,12 @@ declare module 'next-auth' {
    */
   interface Session {
     user: {
-      /** The user's postal address. */
       id: string;
       name: string;
+      role: Role;
     };
+  }
+  interface User extends DefaultUser {
+    role: Role; // the user will now have the property
   }
 }

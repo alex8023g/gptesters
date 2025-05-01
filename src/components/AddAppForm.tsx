@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { User } from '@prisma/client';
 import { useState } from 'react';
-import { faker } from '@faker-js/faker';
 import { appAction } from '@/actions/appActions/appAction';
 import { twJoin } from 'tailwind-merge';
 import { Label } from './ui/label';
@@ -51,7 +50,7 @@ export function AddAppForm({ user }: { user: User }) {
         >
           Add
         </Button>
-        <Button
+        {/* <Button
           onClick={async () => {
             const app2 = { ...app };
             app2.name = faker.word.noun();
@@ -61,12 +60,17 @@ export function AddAppForm({ user }: { user: User }) {
           }}
         >
           Add Faker App
-        </Button>
+        </Button> */}
       </div>
-      {app.isValid === false && (
-        <Label className='text-red-600'>url must be valid</Label>
-      )}
-      <p className='pt-2'>
+      <Label
+        className={twJoin(
+          'text-red-600',
+          app.isValid === false ? '' : 'hidden',
+        )}
+      >
+        url must be valid
+      </Label>
+      <p className=''>
         example: https://play.google.com/store/apps/details?id=todo.cap.v1.com
       </p>
     </div>

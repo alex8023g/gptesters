@@ -3,7 +3,7 @@
 import { appAction } from '@/actions/appActions/appAction';
 import { App } from '@prisma/client';
 import { twJoin } from 'tailwind-merge';
-import { Checkbox } from './ui/checkbox';
+import { Checkbox } from '@/components/ui/checkbox';
 
 type Props = {
   app: App;

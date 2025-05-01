@@ -11,7 +11,6 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 import { HaveEnoughTestersCheckbox } from '@/components/HaveEnoughTestersCheckbox';
 import { RmAsTestersBtn } from '@/components/RmAsTestersBtn';
-import { TestCompletedCheckbox } from '@/components/TestCompletedCheckbox';
 import { TestCompletedDialog } from '@/components/TestCompletedDialog';
 
 export async function generateMetadata({
@@ -34,13 +33,11 @@ type Props = {
 
 export default async function UserPage({ params: { userid } }: Props) {
   const session = await getServerSession(authOptions);
-  console.log('🚀 ~ UserPage ~ session:', session);
-
-  // if (!session) {
-  //   redirect(`/`);
-  // } else if (session.user.id !== userid) {
-  //   redirect(`/user/${session.user.id}`);
-  // }
+  if (!session) {
+    redirect(`/login`);
+  } else if (session.user.id !== userid && session.user.role !== 'ADMIN') {
+    redirect(`/user/${session.user.id}`);
+  }
 
   const userWithHisApp = await userAction.getUserByIdWithApp(userid);
   if (!userWithHisApp) redirect('/');
@@ -166,10 +163,6 @@ export default async function UserPage({ params: { userid } }: Props) {
               userId={userid}
             />
           )}
-          <TestCompletedCheckbox
-            app={userWithHisApp.userApp[0]}
-            userId={userid}
-          />
           <TestCompletedDialog
             app={userWithHisApp.userApp[0]}
             userId={userid}
@@ -177,10 +170,6 @@ export default async function UserPage({ params: { userid } }: Props) {
         </div>
         {isNotAddedTesters ? (
           <div className='flex flex-col sm:block sm:space-x-2'>
-            {/* <p>
-              after testers list will be added to google play console push the
-              button
-            </p> */}
             <AddAsTestersBtn
               appId={userWithHisApp.userApp[0].id}
               userId={userid}
@@ -204,9 +193,6 @@ export default async function UserPage({ params: { userid } }: Props) {
         ) : (
           <></>
         )}
-        {/* {!isNotAddedTesters && (
-          <TestCompletedSwitch app={userWithHisApp.userApp} userId={userid} />
-        )} */}
       </div>
       <AppForTestList
         userId={userid}

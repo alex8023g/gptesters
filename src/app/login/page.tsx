@@ -1,7 +1,15 @@
 import { SignInBtn } from '@/components/SignInBtn';
+import { getServerSession } from 'next-auth/next';
 import Image from 'next/image';
+import { authOptions } from '../api/auth/[...nextauth]/authOptions';
+import { redirect } from 'next/navigation';
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const session = await getServerSession(authOptions);
+
+  if (session?.user.id) {
+    redirect(`/user/${session.user.id}`);
+  }
   return (
     <div className='grid min-h-svh grid-cols-1 lg:grid-cols-2'>
       <div className='flex flex-col gap-4 p-6 md:p-10'>
