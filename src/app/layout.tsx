@@ -4,6 +4,7 @@ import './globals.css';
 import { Header } from '@/components/Header';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from './api/auth/[...nextauth]/authOptions';
+import { YaMetrika } from '@/components/YaMetrika';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -29,6 +30,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
   return (
     <html lang='en'>
+      <YaMetrika />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
